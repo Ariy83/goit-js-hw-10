@@ -1,6 +1,7 @@
 import { Report } from 'notiflix/build/notiflix-report-aio';
-import SlimSelect from 'slim-select';
 import { fetchBreeds, fetchCatByBreed } from './cat-api';
+import SlimSelect from 'slim-select';
+import 'slim-select/dist/slimselect.css';
 
 const refs = {
   breedSelectEl: document.querySelector('.breed-select'),
@@ -23,25 +24,13 @@ function breedsSelect(breedsArray) {
 function onContentLoaded() {
   refs.breedSelectEl.classList.add('is-hidden');
   refs.pLoaderEl.classList.remove('is-hidden');
-  refs.pErrorEl.classList.add('is-hidden');
+
   fetchBreeds()
     .then(res => {
       refs.breedSelectEl.innerHTML = breedsSelect(res);
-      // new SlimSelect({
-      //   select: '#single',
-      //   settings: {
-      //     alwaysOpen: false,
-      //     text: 'text', // Required
-      //     value: 'value', // Optional - value will be set by text if not set
-      //     html: '<b>Html</b>', // Optional - will be used for display purposes if set
-      //     selected: false, // Optional - default is false
-      //     display: true, // Optional - default is true
-      //     disabled: false, // Optional - default is false
-      //     mandatory: false, // Optional - default is false
-      //     placeholder: false, // Optional - default is false
-      //     class: '',
-      //   },
-      // });
+      new SlimSelect({
+        select: '#selectElement',
+      });
     })
     .then(res => {
       refs.breedSelectEl.classList.remove('is-hidden');
@@ -49,7 +38,6 @@ function onContentLoaded() {
     })
     .catch(err => {
       refs.pLoaderEl.classList.add('is-hidden');
-      refs.pErrorEl.classList.remove('is-hidden');
       Report.failure('Oops! Something went wrong!', 'Try reloading the page!');
     });
 }
@@ -57,7 +45,7 @@ function onContentLoaded() {
 function onBreedSelectChange(e) {
   refs.catInfoEl.classList.add('is-hidden');
   refs.pLoaderEl.classList.remove('is-hidden');
-  refs.pErrorEl.classList.add('is-hidden');
+
   fetchCatByBreed(e.target.value)
     .then(res => {
       refs.catInfoEl.innerHTML = catInfoMarkup(res);
@@ -68,7 +56,6 @@ function onBreedSelectChange(e) {
     })
     .catch(err => {
       refs.pLoaderEl.classList.add('is-hidden');
-      refs.pErrorEl.classList.remove('.is-hidden');
       Report.failure('Oops! Something went wrong!', 'Try reloading the page!');
     });
 }
